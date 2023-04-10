@@ -7,7 +7,7 @@ const categorySchema = new mongoose.Schema({
         type:String, 
         default: () => nanoid(4)
     },
-    title: {type: String, required: true},
+    title: {type: String, lowercase: true, required: true},
     slug: String,
     createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: false}, // Would Modified Later
     image: {

@@ -31,7 +31,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
     if (!category) return next(new ResError('In-valid Category Id', 400))
     if (req.body.title) {
         if (req.body.title === category.title) return next(new ResError('Cannot Update Title With Same Name', 400))
-        if (await CategoryModel.findOne({title: req.body.title})) return next(new ResError('This Category Already Exist', 400))
+        if (await CategoryModel.findOne({title: req.body.title})) return next(new ResError('This Category Already Exist', 409))
         category.title = req.body.title
     }
     if (req.file) {
@@ -57,3 +57,4 @@ export const getAllCategories = async (req: Request, res: Response, next: NextFu
     if (!Categories) return next(new ResError('SomeThing Went Wrong Please Try Again', 500))
     return res.status(200).json({Categories})
 }
+

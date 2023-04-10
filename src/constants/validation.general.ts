@@ -13,6 +13,13 @@ export interface File {
     dist?: string;
 }
 
+export interface Duration {
+    month: number;
+    day: number;
+    hour: number;
+    min: number
+}
+
 export const generalFields = {
     file: joi.object<File>({
         filename: joi.string().required(),
@@ -28,5 +35,11 @@ export const generalFields = {
     email: joi.string().email({maxDomainSegments: 2}),
     Id: joi.string().custom((value) => {
         return mongoose.Types.ObjectId.isValid(value) ? true : false
+    }),
+    duration: joi.object<Duration>({
+        month: joi.number().positive().min(0).max(12),
+        day: joi.number().positive().min(0).max(31),
+        hour: joi.number().positive().min(0).max(24),
+        min: joi.number().positive().min(0).max(60),
     })
 }

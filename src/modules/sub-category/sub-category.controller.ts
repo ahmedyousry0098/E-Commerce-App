@@ -12,7 +12,7 @@ export const addSubCategory: RequestHandler = async (req: Request, res: Response
     if (!category) return next(new ResError('Parent Category Is Not Exist', 400))
     const subCategory = await SubCategoryModel.findOne({title})
     if (subCategory) {
-        return next(new ResError('Sub-Category Already Exist', 400))
+        return next(new ResError('Sub-Category Already Exist', 409))
     }
     const customId = nanoid(4)
     const {public_id, secure_url} = await cloudinary.uploader.upload(
