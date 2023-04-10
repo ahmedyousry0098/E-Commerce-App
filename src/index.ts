@@ -3,8 +3,6 @@ import connectDB from '../DB/connectDB'
 import categoryRouter from './modules/category/catrgory.routes'
 import { config } from 'dotenv'
 import { globalErrorHandling } from './utils/errorHandling'
-import { log } from 'console'
-
 config({path: './config/.env'})
 
 connectDB()

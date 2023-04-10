@@ -1,6 +1,6 @@
 import joi from 'joi'
-import { generalFields } from '../../constants/validation.schemas'
-import { File } from '../../constants/validation.schemas'
+import { generalFields } from '../../constants/validation.general'
+import { File } from '../../constants/validation.general'
 
 interface CreateCategory {
     title: string,
@@ -12,12 +12,12 @@ interface UpdateCategory extends CreateCategory {
 }
 
 export const createCategorySchema = joi.object<CreateCategory>({
-    title: joi.string().required(),
+    title: generalFields.title.required(),
     file: generalFields.file.required()
 }).required();
 
 export const updateCategorySchema = joi.object<UpdateCategory>({
     categoryId: generalFields.Id.required(),
-    title: joi.string(),
+    title: generalFields.title,
     file: generalFields.file
 }).required()

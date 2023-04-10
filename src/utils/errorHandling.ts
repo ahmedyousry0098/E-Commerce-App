@@ -10,12 +10,12 @@ export class ResError extends Error {
 
 export const asyncHandler = (API: Function) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        API(req, res, next).catch((err:ResError) => next(new ResError(err.message, err.code)))
+        API(req, res, next).catch((err:ResError) => next(err))
     }
 }
 
 export const globalErrorHandling: ErrorRequestHandler = (err, req, res, next) => {
     return process.env.MODE === 'dev' 
-        ? res.status(err.code).json({message: err.message, stack: err.stack})
-        : res.status(err.code).json({message: err.message})
+        ? res.status(err.code || 500).json({message: err.message, stack: err.stack})
+        : res.status(err.code || 500).json({message: err.message})
 }

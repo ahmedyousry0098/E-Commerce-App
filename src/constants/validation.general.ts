@@ -10,6 +10,7 @@ export interface File {
     destination: string;
     originalname: string;
     size: number;
+    dist?: string;
 }
 
 export const generalFields = {
@@ -23,7 +24,8 @@ export const generalFields = {
         destination: joi.string(),
         size: joi.number().positive().required()
     }),
-    email: joi.string(),
+    title: joi.string().regex(/^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+)*$/),
+    email: joi.string().email({maxDomainSegments: 2}),
     Id: joi.string().custom((value) => {
         return mongoose.Types.ObjectId.isValid(value) ? true : false
     })
