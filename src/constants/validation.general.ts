@@ -31,15 +31,18 @@ export const generalFields = {
         destination: joi.string(),
         size: joi.number().positive().required()
     }),
-    title: joi.string().regex(/^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+)*$/),
-    email: joi.string().email({maxDomainSegments: 2}),
-    Id: joi.string().custom((value) => {
-        return mongoose.Types.ObjectId.isValid(value) ? true : false
-    }),
     duration: joi.object<Duration>({
         month: joi.number().positive().min(0).max(12),
         day: joi.number().positive().min(0).max(31),
         hour: joi.number().positive().min(0).max(24),
         min: joi.number().positive().min(0).max(60),
-    })
+    }),
+    Id: joi.string().custom((value) => {
+        return mongoose.Types.ObjectId.isValid(value) ? true : false
+    }),
+    title: joi.string().regex(/^[a-zA-Z0-9_]+( [a-zA-Z0-9_]+)*$/),
+    userName: joi.string().regex(/[A-Za-z]{3,15}(?: [A-Za-z]{3,15}){1,2}$/),
+    email: joi.string().email({maxDomainSegments: 2}),
+    password: joi.string().regex(/^[A-Za-z0-9-_@$]{4,30}$/),
+    phone: joi.string().regex(/^(\+2|002)?(01[0125])[0-9]{8}$/)
 }

@@ -1,9 +1,12 @@
 import express, {NextFunction, Request, Response} from 'express'
 import connectDB from '../DB/connectDB'
+import authRouter from './modules/auth/auth.routes'
 import categoryRouter from './modules/category/catrgory.routes'
 import couponRouter from './modules/coupon/coupon.routes'
 import { config } from 'dotenv'
 import { globalErrorHandling } from './utils/errorHandling'
+import UserModel from '../DB/models/user.model'
+import CategoryModel from '../DB/models/category.model'
 config({path: './config/.env'})
 
 connectDB()
@@ -15,6 +18,7 @@ const baseURL = process.env.BASE_URL
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
+app.use(`${baseURL}`, authRouter)
 app.use(`${baseURL}/category`, categoryRouter)
 app.use(`${baseURL}/coupon`, couponRouter)
 
