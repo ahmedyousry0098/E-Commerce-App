@@ -3,16 +3,17 @@ import {hash, compareHash} from '../../src/utils/encryption'
 
 export interface User {
     userName: string,
-    email?: string,
+    email: string,
     password: string,
     gender: string,
     phone: string,
     DOB?: Date,
     status?: string,
     isConfirmed?: boolean,
+    comparePassword: (password:string) => boolean
 }
 
-const userSchema = new Schema({
+const userSchema = new Schema<User>({
     userName: {
         type: String,
         lowercase: true,
@@ -41,8 +42,8 @@ const userSchema = new Schema({
     DOB: Date,
     status: {
         type: String,
-        enum: ['available', 'blocked', 'deleted'],
-        default: 'available'
+        enum: ['active', 'blocked', 'deleted'],
+        default: 'active'
     },
     isConfirmed: {type: Boolean, default: false},
 }, {
@@ -60,6 +61,6 @@ userSchema.pre('save', function(next){
     next()
 })
 
-const UserModel = mongoose.model('User', userSchema)
+const UserModel = mongoose.model<User>('User', userSchema)
 
 export default UserModel

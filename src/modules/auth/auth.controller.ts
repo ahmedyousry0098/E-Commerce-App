@@ -52,6 +52,12 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
         return next(new ResError('In-valid LogIn Informations', 400))
     if (!user.comparePassword(password)) 
         return next(new ResError('In-valid LogIn Informations', 400))
+    if (!user.isConfirmed)
+        return next(new ResError('Please Confirm Your Email First', 403))
+    if (user.status === 'deleted')
+        return next(new ResError('Account has been deleted, Try to sign up again', 404))
+    if (user.status === 'blocked')
+        return next(new ResError('Sorry this account has been blocked', 403))
     const token = generateToken({id: user._id, email: user.email})
     return res.json({message: 'Login Successfully', token})
 } 

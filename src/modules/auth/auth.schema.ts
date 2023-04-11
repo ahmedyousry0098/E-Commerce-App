@@ -21,7 +21,7 @@ export const registerSchema = joi.object<Register>({
     password: generalFields.password.required(),
     confirmationPassword: joi.string().valid(joi.ref('password')).required(),
     gender: joi.string().valid('male', 'female').required(),
-    phone: generalFields.phone.required()
+    phone: generalFields.phone.required(),
 }).required()
 
 export const confirmEmailSchema = joi.object<ConfirmEmail>({
