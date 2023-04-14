@@ -1,6 +1,7 @@
 import mongoose, {Schema, model} from 'mongoose'
+import { Coupon } from '../../src/types/Coupon'
 
-const couponSchema = new Schema({
+const couponSchema = new Schema<Coupon>({
     code: {
         type: String,
         unique: true,
@@ -20,10 +21,14 @@ const couponSchema = new Schema({
         default: 'Valid'
     },
     usedBy: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+    createdBy: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
+    }
 }, {
     timestamps: true
 })
 
-const CouponModel = mongoose.models.Coupon || model('Coupon', couponSchema)
+const CouponModel = model<Coupon>('Coupon', couponSchema)
 
 export default CouponModel

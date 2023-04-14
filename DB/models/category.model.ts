@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
+import { Category } from '../../src/types/Category'
 import slugify from 'slugify'
 import { nanoid } from 'nanoid'
 
-const categorySchema = new mongoose.Schema({
+const categorySchema = new mongoose.Schema<Category>({
     customId: {
         type:String, 
         default: () => nanoid(4)
@@ -33,6 +34,6 @@ categorySchema.virtual('sub-categories', {
     foreignField: 'category'
 })
 
-const CategoryModel = mongoose.model('Category', categorySchema)
+const CategoryModel = mongoose.model<Category>('Category', categorySchema)
 
 export default CategoryModel

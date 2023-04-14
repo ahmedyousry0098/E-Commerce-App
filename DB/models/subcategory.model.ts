@@ -1,7 +1,8 @@
 import mongoose, {Schema} from 'mongoose'
+import { SubCategory } from '../../src/types/SubCategory';
 import {nanoid} from 'nanoid'
 
-const subCategorySchema = new Schema({
+const subCategorySchema = new Schema<SubCategory>({
     customId: {type: String, default: () => nanoid(4)},
     title: {
         type: String,
@@ -16,11 +17,16 @@ const subCategorySchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Category',
         required: true
+    },
+    createdBy: {
+        type: mongoose.Types.ObjectId, 
+        ref: 'User', 
+        required: true
     }
 }, {
     timestamps: true
 })
 
-const SubCategoryModel = mongoose.models.SubCategoryModel || mongoose.model('SubCategory', subCategorySchema)
+const SubCategoryModel = mongoose.model<SubCategory>('SubCategory', subCategorySchema)
 
 export default SubCategoryModel;
