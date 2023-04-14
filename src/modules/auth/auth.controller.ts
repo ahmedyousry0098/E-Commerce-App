@@ -3,7 +3,9 @@ import UserModel from '../../../DB/models/user.model'
 import { ResError } from '../../utils/errorHandling'
 import { sendEmail } from '../../utils/sendEmail'
 import { confirmEmailTemp } from '../../utils/templates/confirmEmailTemp'
+import { forgetPasswordTemp } from '../../utils/templates/forgetPasswordTemp'
 import {generateToken, verifyToken} from '../../utils/encryption'
+import {customAlphabet} from 'nanoid'
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
     const {userName, email, password, gender, phone} = req.body
@@ -61,3 +63,34 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
     const token = generateToken({id: user._id, email: user.email})
     return res.json({message: 'Login Successfully', token})
 } 
+
+export const requestForgetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const {email} = req.body
+    const resetCode = customAlphabet('123456789', 4)
+    const user = await UserModel.findOneAndUpdate({email}, {resetCode: resetCode()}, {new: true})
+    if (!user) {
+        return next(new ResError('Not Registered User', 401))
+    }
+    const emailInfo = await sendEmail({
+        to: email, 
+        subject: 'Reset Password Code', 
+        html: forgetPasswordTemp(`${user.resetCode}`)
+    })
+    if (!emailInfo.accepted.length) {
+        return next(new ResError('Cannot Send Email, Please Try Again', 503))
+    }
+    return res.status(200).json({message: 'Check email inbox'})
+}
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const {email, resetCode, password} = req.body
+    const user = await UserModel.findOne({email})
+    if (!user) return next(new ResError('Not Registered User', 401))
+    if (user.resetCode !== resetCode) return next(new ResError('In-valid Code, Please Check Your Email To input the valid Code', 400))
+    user.password = password
+    user.resetCode = undefined
+    if (! await user.save()) {
+        return next(new ResError('Something Went Wrong Please Try Again', 500))
+    }
+    return res.status(200).json({message: 'Password Updated Successfully'})
+}

@@ -1,13 +1,20 @@
 import express, {NextFunction, Request, Response} from 'express'
+import { User } from './types/User'
 import connectDB from '../DB/connectDB'
 import authRouter from './modules/auth/auth.routes'
 import categoryRouter from './modules/category/catrgory.routes'
 import couponRouter from './modules/coupon/coupon.routes'
-import { config } from 'dotenv'
+import { config } from "dotenv"
 import { globalErrorHandling } from './utils/errorHandling'
-import UserModel from '../DB/models/user.model'
-import CategoryModel from '../DB/models/category.model'
 config({path: './config/.env'})
+
+declare global {
+    namespace Express {
+        export interface Request {
+            user: User
+        }
+    }
+}
 
 connectDB()
 

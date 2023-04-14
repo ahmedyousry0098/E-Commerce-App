@@ -1,6 +1,8 @@
 import {Request, Response, NextFunction, RequestHandler} from 'express'
 import {nanoid} from 'nanoid'
 import CategoryModel from '../../../DB/models/category.model'
+import CouponModel from '../../../DB/models/coupon.model'
+import SubCategoryModel from '../../../DB/models/subcategory.model'
 import cloudinary from '../../utils/cloudinary'
 import { ResError } from '../../utils/errorHandling'
 
@@ -16,6 +18,7 @@ export const addCategory = async (req: Request, res: Response, next: NextFunctio
         customId,
         title,
         image: {public_id, secure_url},
+        createdBy: req.user._id,
     })
 
     if (! await category.save()) {
@@ -52,9 +55,17 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
 }
 
 export const getAllCategories = async (req: Request, res: Response, next: NextFunction) => {
-    const Categories = await CategoryModel.find().populate('sub-categories', "title")
-    if (!Categories.length) return res.status(200).json({message: 'There\'s No Categories Yet'})
-    if (!Categories) return next(new ResError('SomeThing Went Wrong Please Try Again', 500))
-    return res.status(200).json({Categories})
+    let categoriesList: any[] = []
+    let subCategoriesList: any[] = []
+    const Categories = CategoryModel.find().cursor()
+    for (let cate = await Categories.next(); cate != null; await Categories.next()) {
+        const subCategories = SubCategoryModel.find({category: cate._id}).cursor()
+        for (let subCate = await subCategories.next(); cate != null; await subCategories.next()) {
+            const coupons = await CouponModel.find({subCategoryId: subCate._id})
+            subCategoriesList.push({subCate, coupons})
+        }
+        categoriesList.push({cate, subCategoriesList})
+    }
+    return res.status(200).json({categoriesList})
 }
 

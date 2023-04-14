@@ -9,11 +9,11 @@ const categorySchema = new mongoose.Schema({
     },
     title: {type: String, lowercase: true, required: true},
     slug: String,
-    createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: false}, // Would Modified Later
+    createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true}, 
     image: {
         secure_url: {type:String, required: true},
         public_id: {type:String, required: true}
-    },
+    }
 }, {
     timestamps: true,
     toJSON: {virtuals: true},

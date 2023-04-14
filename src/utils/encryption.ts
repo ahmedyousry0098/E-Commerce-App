@@ -7,6 +7,10 @@ interface TokenPayload {
     email?: string
 }
 
+interface TokenDecoded extends TokenPayload {
+    iat: number
+}
+
 export const generateToken = (
     payload: TokenPayload, 
     signature: string = process.env.TOKEN_SIGNATURE!,
@@ -18,7 +22,7 @@ export const generateToken = (
 
 
 export const verifyToken = (token: string, signature: string = process.env.TOKEN_SIGNATURE!) => {
-    const decoded = jwt.verify(token, signature) as TokenPayload
+    const decoded = jwt.verify(token, signature) as TokenDecoded
     return decoded
 }
 

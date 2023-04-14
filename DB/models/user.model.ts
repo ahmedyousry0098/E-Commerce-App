@@ -1,17 +1,6 @@
-import mongoose, {Schema, Document} from 'mongoose'
+import mongoose, {Schema} from 'mongoose'
 import {hash, compareHash} from '../../src/utils/encryption'
-
-export interface User {
-    userName: string,
-    email: string,
-    password: string,
-    gender: string,
-    phone: string,
-    DOB?: Date,
-    status?: string,
-    isConfirmed?: boolean,
-    comparePassword: (password:string) => boolean
-}
+import { User } from '../../src/types/User'
 
 const userSchema = new Schema<User>({
     userName: {
@@ -39,13 +28,15 @@ const userSchema = new Schema<User>({
         required: [true, 'Phone Number is required'],
         match: [/^(\+2|002)?01[0125][0-9]{8}$/, 'In-Valid Phone Number']
     },
-    DOB: Date,
     status: {
         type: String,
         enum: ['active', 'blocked', 'deleted'],
         default: 'active'
     },
+    DOB: Date,
     isConfirmed: {type: Boolean, default: false},
+    resetCode: String,
+    lastChangePasswordTime: Date
 }, {
     timestamps: true,
     methods: {
@@ -56,9 +47,12 @@ const userSchema = new Schema<User>({
 })
 
 userSchema.pre('save', function(next){
-    const hashedPassword = hash(this.password)
-    this.password = hashedPassword
-    next()
+    if (this.isModified('password')) {
+        const hashedPassword = hash(this.password)
+        this.password = hashedPassword
+        this.lastChangePasswordTime = new Date()
+        next()
+    }
 })
 
 const UserModel = mongoose.model<User>('User', userSchema)
