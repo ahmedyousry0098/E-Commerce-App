@@ -30,7 +30,6 @@ export const addSubCategory = async (req: Request, res: Response, next: NextFunc
         image: {public_id, secure_url},
         category: categoryId,
         createdBy: req.user._id,
-        updatedBy: req.user._id
     })
 
     if (! await newSubCategory.save()) {

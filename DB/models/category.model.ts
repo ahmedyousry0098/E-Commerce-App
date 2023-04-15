@@ -11,6 +11,7 @@ const categorySchema = new mongoose.Schema<Category>({
     title: {type: String, lowercase: true, required: true},
     slug: String,
     createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true}, 
+    updatedBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true}, 
     image: {
         secure_url: {type:String, required: true},
         public_id: {type:String, required: true}

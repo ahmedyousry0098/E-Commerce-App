@@ -9,5 +9,6 @@ export interface Coupon {
     };
     status: string;
     usedBy: (typeof mongoose.Types.ObjectId) [];
-    createdBy: typeof mongoose.Types.ObjectId
+    createdBy: typeof mongoose.Types.ObjectId;
+    updatedBy: typeof mongoose.Types.ObjectId;
 } 

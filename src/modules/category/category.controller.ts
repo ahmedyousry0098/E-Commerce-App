@@ -50,6 +50,7 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
         }
         category.image = {public_id, secure_url}
     }
+    category.updatedBy = req.user._id
     if (! await category.save()) return next(new ResError('SomeThing Went Wrong Please Try Again', 500))    
     return res.status(200).json({message: 'Updated'})
 }

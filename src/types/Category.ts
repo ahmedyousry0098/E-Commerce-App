@@ -7,5 +7,6 @@ export interface Category {
     title: string;
     slug: string;
     createdBy: typeof mongoose.Types.ObjectId;
+    updatedBy: typeof mongoose.Types.ObjectId;
     image: Image
 }

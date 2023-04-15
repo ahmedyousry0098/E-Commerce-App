@@ -31,7 +31,7 @@ export const updateCoupon = async (req: Request, res: Response, next: NextFuncti
     if (!Object.keys(req.body).length){
         return next(new ResError('Please Enter Data Which You need To Update', 400))
     }
-    const coupon = await CouponModel.findByIdAndUpdate(couponId, req.body, {new: true})
+    const coupon = await CouponModel.findByIdAndUpdate(couponId, {...req.body, updatedBy: req.user._id}, {new: true})
      return !coupon 
         ? next(new ResError('Coupon Not Found', 400))
         : res.status(200).json({message: 'Updated Successfully'})
