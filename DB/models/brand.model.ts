@@ -15,6 +15,8 @@ const brnadSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User'
     }
+}, {
+    timestamps: true
 })
 
 const BrandModel = model('Brand', brnadSchema)
