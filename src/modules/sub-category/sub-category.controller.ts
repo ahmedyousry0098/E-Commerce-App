@@ -5,7 +5,7 @@ import cloudinary from '../../utils/cloudinary'
 import { ResError } from '../../utils/errorHandling'
 import { nanoid } from 'nanoid'
 
-export const addSubCategory: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const addSubCategory = async (req: Request, res: Response, next: NextFunction) => {
     const {categoryId} = req.params
     const {title} = req.body
     const category = await CategoryModel.findById(categoryId)
@@ -23,14 +23,17 @@ export const addSubCategory: RequestHandler = async (req: Request, res: Response
     if (!public_id || !secure_url) {
         return next(new ResError('SomeThing Went Wrong Please Try Again', 500))
     }
+
     const newSubCategory = new SubCategoryModel({
+        customId,
         title,
         image: {public_id, secure_url},
         category: categoryId,
-        customId
+        createdBy: req.user._id,
+        updatedBy: req.user._id
     })
 
-    if (! await newSubCategory.save()){
+    if (! await newSubCategory.save()) {
         await cloudinary.uploader.destroy(public_id)
         return next(new ResError('Cannot Save SubCategory', 500))
     }
@@ -45,6 +48,8 @@ export const updateSubCategory = async (req: Request, res: Response, next: NextF
             select: 'customId'
         }
     ])
+    console.log(subCategory);
+    
     if (!subCategory) {
         return next(new ResError('In-valid Cantegory OR Sub-Category id', 400))
     }
@@ -57,7 +62,7 @@ export const updateSubCategory = async (req: Request, res: Response, next: NextF
     if (req.file) {
         const {public_id, secure_url} = await cloudinary.uploader.upload(
             req.file.path, 
-            {folder: `${process.env.APP_NAME}/category/${subCategory.category.customId}/sub-category/${subCategory.customId}`}
+            {folder: `${process.env.APP_NAME}/category/${subCategory.category}/sub-category/${subCategory.customId}`}
         )
         if (!public_id || !secure_url) {
             return next(new ResError('Cannot Upload New Picture', 500))
@@ -67,6 +72,7 @@ export const updateSubCategory = async (req: Request, res: Response, next: NextF
         }
         subCategory.image = {public_id, secure_url}
     }
+    subCategory.updatedBy = req.user._id
     return ! await subCategory.save() 
         ? next(new ResError('Cannot Save Changes, Please Try Again', 500))
         : res.status(200).json({message: 'Done'})

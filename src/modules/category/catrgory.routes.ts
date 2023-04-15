@@ -9,6 +9,7 @@ import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router()
 
+// router.use(isAuthenticated)
 router.use('/:categoryId/subcategory', subCategoryRouter)
 
 router.post('/', uploadFile(validation.image).single('image'), validate(createCategorySchema), isAuthenticated, asyncHandler(addCategory))

@@ -22,7 +22,11 @@ const subCategorySchema = new Schema<SubCategory>({
         type: mongoose.Types.ObjectId, 
         ref: 'User', 
         required: true
-    }
+    },
+    updatedBy: {
+        type: mongoose.Types.ObjectId, 
+        ref: 'User',
+    },
 }, {
     timestamps: true
 })

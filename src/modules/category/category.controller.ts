@@ -55,17 +55,17 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
 }
 
 export const getAllCategories = async (req: Request, res: Response, next: NextFunction) => {
-    let categoriesList: any[] = []
-    let subCategoriesList: any[] = []
-    const Categories = CategoryModel.find().cursor()
-    for (let cate = await Categories.next(); cate != null; await Categories.next()) {
-        const subCategories = SubCategoryModel.find({category: cate._id}).cursor()
-        for (let subCate = await subCategories.next(); cate != null; await subCategories.next()) {
-            const coupons = await CouponModel.find({subCategoryId: subCate._id})
-            subCategoriesList.push({subCate, coupons})
+    const categories = await CategoryModel.find().populate([
+        {
+            path: 'sub-categories'
         }
-        categoriesList.push({cate, subCategoriesList})
+    ])
+    if (!categories) {
+        return next(new ResError('Something Went Wrong Please Try again', 500))
     }
-    return res.status(200).json({categoriesList})
+    if (!categories.length) {
+        return res.status(200).json({message: 'No Categories Found'})
+    }
+    return res.status(200).json({message: 'Done', categories})
 }
 

@@ -4,8 +4,11 @@ import {uploadFile, validation} from '../../utils/multer'
 import {validate} from '../../middlewares/validation'
 import { asyncHandler } from '../../utils/errorHandling'
 import { createSubCategorySchema, updateSubCategorySchema } from './sub-category.schema'
+import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router({mergeParams: true})
+
+router.use(isAuthenticated)
 
 router.post('/', uploadFile(validation.image).single('image'), validate(createSubCategorySchema), asyncHandler(addSubCategory))
 router.put(

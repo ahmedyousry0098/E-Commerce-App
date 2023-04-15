@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import mongoose from 'mongoose'
 
 interface TokenPayload {
-    id: mongoose.Types.ObjectId,
+    id: typeof mongoose.Types.ObjectId,
     email?: string
 }
 

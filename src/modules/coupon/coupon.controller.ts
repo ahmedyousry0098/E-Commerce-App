@@ -18,7 +18,8 @@ export const addCoupon = async (req: Request, res: Response, next: NextFunction)
         expirationDate: {
             from: moment().format('YYYY-MM-DD HH:MM'),
             to: expirationDate
-        }
+        },
+        createdBy: req.user._id
     })
     return !coupon 
         ? next(new ResError('Something Went Wrong Please Try Again', 500))
