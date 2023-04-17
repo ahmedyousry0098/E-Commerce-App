@@ -10,12 +10,12 @@ const router = Router()
 
 router.post(
     '/', 
+    isAuthenticated,
     uploadFile(validation.image).fields([
         {name: 'mainImg', maxCount: 1}, 
         {name: 'subImgs', maxCount: 3}
     ]),
     validate(createProductSchema),
-    isAuthenticated,
     asyncHandler(createProduct)
 )
 

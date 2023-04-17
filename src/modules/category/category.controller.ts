@@ -45,13 +45,13 @@ export const updateCategory = async (req: Request, res: Response, next: NextFunc
         if (!public_id || !secure_url) {
             return next(new ResError('Cannot Upload Image', 500))
         }
-        if (! await cloudinary.uploader.destroy(category.image?.public_id!)) {
-            return next(new ResError('Cannot Delete Old Category Image', 500))
-        }
+        await cloudinary.uploader.destroy(category.image?.public_id!)
         category.image = {public_id, secure_url}
     }
     category.updatedBy = req.user._id
-    if (! await category.save()) return next(new ResError('SomeThing Went Wrong Please Try Again', 500))    
+    if (! await category.save()) {
+        return next(new ResError('SomeThing Went Wrong Please Try Again', 500))
+    } 
     return res.status(200).json({message: 'Updated'})
 }
 

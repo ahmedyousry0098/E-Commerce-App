@@ -10,12 +10,12 @@ const router = Router({mergeParams: true})
 
 router.use(isAuthenticated)
 
-router.post('/', uploadFile(validation.image).single('image'), validate(createSubCategorySchema), isAuthenticated, asyncHandler(addSubCategory))
+router.post('/', isAuthenticated, uploadFile(validation.image).single('image'), validate(createSubCategorySchema), asyncHandler(addSubCategory))
 router.put(
     '/:subCategoryId', 
+    isAuthenticated,
     uploadFile(validation.image).single('image'), 
     validate(updateSubCategorySchema), 
-    isAuthenticated,
     asyncHandler(updateSubCategory)
 )
 

@@ -7,7 +7,7 @@ import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router()
 
-router.post('/', validate(addCouponSchema), isAuthenticated, asyncHandler(addCoupon))
-router.put('/:couponId', validate(updateCouponSchema), isAuthenticated, asyncHandler(updateCoupon))
+router.post('/', isAuthenticated, validate(addCouponSchema), asyncHandler(addCoupon))
+router.put('/:couponId', isAuthenticated, validate(updateCouponSchema), asyncHandler(updateCoupon))
 
 export default router

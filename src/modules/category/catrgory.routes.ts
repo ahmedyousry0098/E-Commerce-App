@@ -12,8 +12,8 @@ const router = Router()
 // router.use(isAuthenticated)
 router.use('/:categoryId/subcategory', subCategoryRouter)
 
-router.post('/', uploadFile(validation.image).single('image'), validate(createCategorySchema), isAuthenticated, asyncHandler(addCategory))
-router.put('/:categoryId', uploadFile(validation.image).single('image'), validate(updateCategorySchema), isAuthenticated, asyncHandler(updateCategory))
+router.post('/', isAuthenticated, uploadFile(validation.image).single('image'), validate(createCategorySchema), asyncHandler(addCategory))
+router.put('/:categoryId', isAuthenticated, uploadFile(validation.image).single('image'), validate(updateCategorySchema), asyncHandler(updateCategory))
 router.get('/', asyncHandler(getAllCategories))
 
 export default router
