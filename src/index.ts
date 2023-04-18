@@ -4,6 +4,7 @@ import connectDB from '../DB/connectDB'
 import authRouter from './modules/auth/auth.routes'
 import categoryRouter from './modules/category/catrgory.routes'
 import couponRouter from './modules/coupon/coupon.routes'
+import cartRouter from './modules/cart/cart.routes'
 import { globalErrorHandling } from './utils/errorHandling'
 import productRouter from './modules/product/product.routes'
 import { config } from "dotenv"
@@ -30,6 +31,7 @@ app.use(`${baseURL}`, authRouter)
 app.use(`${baseURL}/category`, categoryRouter)
 app.use(`${baseURL}/coupon`, couponRouter)
 app.use(`${baseURL}/product`, productRouter)
+app.use(`${baseURL}/cart`, cartRouter)
 
 app.use('*', (_, res: Response) => {
     return res.status(404).json({message: 'Page Not Found'})

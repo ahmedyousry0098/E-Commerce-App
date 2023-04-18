@@ -17,6 +17,8 @@ export interface Product {
     brandId: typeof mongoose.Types.ObjectId
     mainImg: Image
     subImgs: Image[]
+    wishList: typeof mongoose.Types.ObjectId []
+    isDeleted: boolean
     createdBy: typeof mongoose.Types.ObjectId
     updatedBy: typeof mongoose.Types.ObjectId
 }

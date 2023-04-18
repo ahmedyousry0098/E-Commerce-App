@@ -1,4 +1,4 @@
-import mongoose, {Schema, model} from 'mongoose'
+import mongoose, {Schema, model, mongo} from 'mongoose'
 import { Product } from '../../src/types/Product'
 import slugify from 'slugify'
 import { nanoid } from 'nanoid'
@@ -35,6 +35,8 @@ const productSchema = new Schema<Product>({
         public_id: {type: String, required: true},
     },
     subImgs: [{secure_url:String, public_id:String}],
+    wishList: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+    isDeleted: {type: Boolean, default: false},
     createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     updatedBy: {type: mongoose.Types.ObjectId, ref: 'User'}
 }, {
