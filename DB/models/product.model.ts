@@ -2,6 +2,7 @@ import mongoose, {Schema, model} from 'mongoose'
 import { Product } from '../../src/types/Product'
 import slugify from 'slugify'
 import { nanoid } from 'nanoid'
+import cloudinary from '../../src/utils/cloudinary'
 
 const productSchema = new Schema<Product>({
     customId: {type:String, default: () => nanoid()},
@@ -19,6 +20,7 @@ const productSchema = new Schema<Product>({
     stock: {type: Number, default: 1},
     price: {type: Number, required: true},
     discount: {type: Number, default: 0},
+    finalPrice: {type:Number},
     color: [String],
     size: {
         type: [String],
@@ -46,13 +48,11 @@ productSchema.pre('save', function(next){
             lower: true
         })
     }
+    if (this.isModified(['price', 'discount'])) {
+        const [price, discount] = [this.price, this.discount]
+        this.finalPrice = price - (price * (discount/100))
+    }
     next()
-})
-
-productSchema.virtual('finalPrice').get(function() {
-    let [price, discount] = [this.price, this.discount]
-    const final_price: number = price - ( price * (discount/100))
-    return final_price
 })
 
 const ProductModel = model<Product>('Product', productSchema)

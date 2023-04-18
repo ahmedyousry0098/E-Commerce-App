@@ -22,7 +22,7 @@ const categorySchema = new mongoose.Schema<Category>({
     toObject: {virtuals: true}
 })
 
-categorySchema.pre('save', function(next) {
+categorySchema.pre(['save'], function(next) {
     if (this.isModified('title')) {
         this.slug = slugify(this.title, "-")
     }
