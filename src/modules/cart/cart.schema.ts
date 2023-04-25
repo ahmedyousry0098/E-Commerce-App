@@ -1,6 +1,5 @@
 import joi from 'joi'
 import { generalFields } from '../../constants/validation.general'
-import {Cart} from '../../types/Cart'
 import mongoose from 'mongoose'
 
 interface CartSchema {

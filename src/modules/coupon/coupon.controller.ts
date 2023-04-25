@@ -4,20 +4,14 @@ import { ResError } from '../../utils/errorHandling'
 import moment from 'moment'
 
 export const addCoupon = async (req: Request, res: Response, next: NextFunction) => {
-    const {code, amount, duration: {month, week, day, hour}} = req.body
+    const {code, amount, duration: {from, to}} = req.body
     if (await CouponModel.findOne({code})) return next(new ResError('Coupon Already Exist', 409))
-    const expirationDate = moment()
-        .add(month, 'month')
-        .add(week, 'week')
-        .add(day, 'day')
-        .add(hour, 'hour')
-        .format('YYYY-MM-DD HH:MM')
     const coupon = await CouponModel.create({
         code,
         amount,
-        expirationDate: {
-            from: moment().format('YYYY-MM-DD HH:MM'),
-            to: expirationDate
+        duration: {
+            from,
+            to
         },
         createdBy: req.user._id
     })

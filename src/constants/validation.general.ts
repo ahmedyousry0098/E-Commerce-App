@@ -14,10 +14,8 @@ export interface File {
 }
 
 export interface Duration {
-    month: number;
-    day: number;
-    hour: number;
-    min: number
+    from?: Date;
+    to: Date
 }
 
 export const generalFields = {
@@ -32,10 +30,8 @@ export const generalFields = {
         size: joi.number().positive().required()
     }),
     duration: joi.object<Duration>({
-        month: joi.number().positive().min(0).max(12),
-        day: joi.number().positive().min(0).max(31),
-        hour: joi.number().positive().min(0).max(24),
-        min: joi.number().positive().min(0).max(60),
+        from: joi.date().greater(Date.now()).required(),
+        to: joi.date().greater(joi.ref('from')).required()
     }),
     Id: joi.string().custom((value) => {
         return mongoose.Types.ObjectId.isValid(value) ? true : false

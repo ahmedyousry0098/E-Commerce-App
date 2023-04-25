@@ -14,7 +14,7 @@ export const addCart = async (req:Request, res:Response, next:NextFunction) => {
         await ProductModel.findByIdAndUpdate(productId, {
             $addToSet: {wishList: userId}
         })
-        return next(new ResError('Quantity is not available', 400))
+        return next(new ResError(`Sorry, Only ${product.stock} product is available now`, 404))
     }
     const cart = await CartModel.findOne({user: userId})
     if (!cart) {
@@ -22,7 +22,7 @@ export const addCart = async (req:Request, res:Response, next:NextFunction) => {
         const initCart = await CartModel.create({
             user: userId,
             products: {
-                product: productId,
+                productId,
                 quantity
             }
         })
@@ -34,7 +34,7 @@ export const addCart = async (req:Request, res:Response, next:NextFunction) => {
     
     let isProductExist = false
     for (let product of cart.products) {
-        if (product.toString() === productId) {
+        if (product.productId.toString() === productId) {
             product.quantity = quantity
             isProductExist = true
             break;
@@ -42,10 +42,11 @@ export const addCart = async (req:Request, res:Response, next:NextFunction) => {
     }
     
     if (!isProductExist) {
-        cart.products.push({product: productId, quantity})
+        cart.products.push({productId, quantity})
     }
 
-    return !await product.save()
-        ? next(new ResError('Cannot Save Changes', 500))
-        : res.status(200).json({message: 'Done'})
+    if (! await cart.save())
+        return next(new ResError('Cannot Save Changes', 500))
+
+    return res.status(200).json({message: 'Done'})
 }

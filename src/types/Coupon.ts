@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 export interface Coupon {
+    _id: typeof mongoose.Types.ObjectId,
     code: string;
     amount: number;
-    expirationDate: {
+    duration: {
         from: Date;
         to: Date
     };

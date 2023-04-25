@@ -5,20 +5,21 @@ const couponSchema = new Schema<Coupon>({
     code: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        lowercase: true
     },
     amount: {
         type: Number,
         required: true
     },
-    expirationDate: {
-        from: {type: Date, default: Date.now()},
+    duration: {
+        from: {type: Date, default: Date.now(), required: true},
         to: {type: Date, required: true}
     },
     status: {
         type: String,
         enum: ['Valid', 'Expired'],
-        default: 'Valid'
+        default: 'Valid',
     },
     usedBy: [{type: mongoose.Types.ObjectId, ref: 'User'}],
     createdBy: {
