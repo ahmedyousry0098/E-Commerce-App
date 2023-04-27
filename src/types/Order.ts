@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 export type ProductOrderInfo = {
-    product: typeof mongoose.Types.ObjectId;
+    productId: typeof mongoose.Types.ObjectId;
     quantity: number;
     unitPrice: number;
-    totalProductPrice?: number;
+    totalProductPrice: number;
 }
 
 export interface Order {

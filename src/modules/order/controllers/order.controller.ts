@@ -7,11 +7,6 @@ import ProductModel from '../../../../DB/models/product.model'
 import OrderModel from '../../../../DB/models/order.model'
 import CartModel from '../../../../DB/models/cart.model'
 
-
-interface OrderRequest extends Request {
-    coupon?: Coupon
-}
-
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     const {products, phone, adress, couponCode, paymentType} = req.body
     const userId = req.user._id
@@ -42,7 +37,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         }
 
         productsList.push({
-            product: product._id,
+            productId: product._id,
             quantity: product.quantity,
             unitPrice: checkProduct.finalPrice,
             totalProductPrice: checkProduct.finalPrice * product.quantity
@@ -84,11 +79,31 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     }
 
     // Handle Cart
-    const updatedCart = await CartModel.updateOne({user: req.user._id}, {$pull: {product: {$in: productsList.map(prod => prod.product)}}})
+    const updatedCart = await CartModel.updateOne({user: req.user._id}, {$pull: {product: {$in: productsList.map(prod => prod.productId)}}})
     if (!updatedCart.modifiedCount) 
-            return next(new ResError('Something Went Wrong with Coupon, please try again', 500))
+        return next(new ResError('Something Went Wrong with Coupon, please try again', 500))
 
     return res.status(201).json({message: 'Done!'})
 }
 
-export const handle_side_effects = async (req: OrderRequest, res: Response, next: NextFunction) => {}
+export const cancelOrder = async (req: Request, res: Response, next: NextFunction) => {
+    const {orderId} = req.params
+    const {comment} = req.body
+    const userId = req.user._id
+    const order = await OrderModel.findOne({_id: orderId, user: userId})
+    if (!order) return next(new ResError('In-valid Order Id', 404))
+
+    if (
+        order.paymentType == 'cash' && order.status.value !== 'placed' || 
+        order.paymentType == 'credit' && order.status.value !== 'wait-payment'
+    ) {
+        return next(new ResError(`Cannot Cancel Order While it\'s Status ${order.status.value}`, 403))
+    }
+
+    if (order.user.toString() !== userId.toString()) return next(new ResError('Sorry, You Don\'t have permissions To do that', 406))
+    
+    order.status.value = 'canceled'
+    order.status.comment = comment
+    if (! await order.save()) return next(new ResError('Something Went Wrong Please Try Again', 500))
+    return res.status(200).json({message: 'Done'})
+}

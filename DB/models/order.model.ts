@@ -30,11 +30,6 @@ const orderSchema = new Schema<Order>({
     timestamps: true
 })
 
-orderSchema.pre('save', function(next){
-    // this.products.map(prod => prod.totalProductPrice = prod.quantity * prod.unitPrice)
-    next()
-})
-
 const OrderModel = model('Order', orderSchema)
 
 export default OrderModel
