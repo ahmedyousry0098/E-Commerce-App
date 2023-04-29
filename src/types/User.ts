@@ -12,5 +12,6 @@ export interface User {
     isConfirmed?: boolean,
     resetCode?: string,
     lastChangePasswordTime: Date,
+    wishList: typeof mongoose.Types.ObjectId []
     comparePassword: (password:string) => boolean
 }

@@ -5,8 +5,13 @@ import { createProduct, updateProduct } from './product.controller'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
 import { createProductSchema, updateProductSchema } from './product.schema'
+import reviewRouter from '../review/review.routes'
+import wishListRouter from '../wishList/wishList.routes'
 
 const router = Router()
+
+router.use('/:productId/review', reviewRouter)
+router.use('/:productId/wishlist', wishListRouter)
 
 router.post(
     '/', 

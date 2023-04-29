@@ -21,14 +21,14 @@ interface CancelOrder {
 }
 
 export const createOrderSchema = joi.object<CreateOrder>({
-    products: joi.object<ProductOrderInfo>({
+    products: joi.array().items(joi.object<ProductOrderInfo>({
         productId: generalFields.Id.required(),
         quantity: joi.number().positive().integer()
-    }),
+    }).required()),
     phone: joi.array().items(generalFields.phone.required()).required(),
     adress: joi.string().required(),
     comment: joi.string().min(3).max(1500),
-    coupon: joi.string(),
+    coupon: generalFields.Id,
     paymentType: joi.string().valid('credit', 'cash')
 }).required()
 

@@ -107,3 +107,14 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
     }
     return res.status(200).json({message: 'Done'})
 }
+
+export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+
+    const products = await ProductModel.find().populate([
+        {
+            path: 'review'
+        }
+    ])
+
+    return res.status(200).json({products})
+}

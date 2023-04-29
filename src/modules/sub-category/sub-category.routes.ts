@@ -8,9 +8,13 @@ import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router({mergeParams: true})
 
-router.use(isAuthenticated)
-
-router.post('/', isAuthenticated, uploadFile(validation.image).single('image'), validate(createSubCategorySchema), asyncHandler(addSubCategory))
+router.post(
+    '/', 
+    isAuthenticated, 
+    uploadFile(validation.image).single('image'), 
+    validate(createSubCategorySchema), 
+    asyncHandler(addSubCategory)
+)
 router.put(
     '/:subCategoryId', 
     isAuthenticated,

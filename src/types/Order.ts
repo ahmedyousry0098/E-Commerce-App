@@ -10,7 +10,7 @@ export type ProductOrderInfo = {
 export interface Order {
     user: typeof mongoose.Types.ObjectId;
     products: ProductOrderInfo[];
-    coupon?: typeof mongoose.Types.ObjectId;
+    couponId?: typeof mongoose.Types.ObjectId;
     checkoutPrice: number;
     paymentType: string;
     phone: string[];

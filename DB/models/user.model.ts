@@ -36,7 +36,10 @@ const userSchema = new Schema<User>({
     DOB: Date,
     isConfirmed: {type: Boolean, default: false},
     resetCode: String,
-    lastChangePasswordTime: Date
+    lastChangePasswordTime: Date,
+    wishList: {
+        type: [{type: mongoose.Types.ObjectId, ref: 'Product'}]
+    }
 }, {
     timestamps: true,
     methods: {

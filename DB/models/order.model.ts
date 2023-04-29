@@ -4,12 +4,12 @@ import { Order } from '../../src/types/Order'
 const orderSchema = new Schema<Order>({
     user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     products: [{
-        product: {type: mongoose.Types.ObjectId, ref: 'Product', required: true},
+        productId: {type: mongoose.Types.ObjectId, ref: 'Product', required: true},
         quantity: {type: Number, required: true},
         unitPrice: {type: Number, required: true},
         totalProductPrice: {type: Number}
     }],
-    coupon: {type: mongoose.Types.ObjectId, ref: 'Coupon'},
+    couponId: {type: mongoose.Types.ObjectId, ref: 'Coupon'},
     checkoutPrice: {type: Number, required: true},
     paymentType: {
         type: String,

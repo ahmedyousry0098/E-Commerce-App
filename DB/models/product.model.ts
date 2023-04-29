@@ -40,6 +40,8 @@ const productSchema = new Schema<Product>({
     createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     updatedBy: {type: mongoose.Types.ObjectId, ref: 'User'}
 }, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
     timestamps: true
 })
 
@@ -55,6 +57,12 @@ productSchema.pre('save', function(next){
         this.finalPrice = price - (price * (discount/100))
     }
     next()
+})
+
+productSchema.virtual('review', {
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'productId'
 })
 
 const ProductModel = model<Product>('Product', productSchema)

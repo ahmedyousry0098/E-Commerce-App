@@ -8,13 +8,13 @@ import OrderModel from '../../../../DB/models/order.model'
 import CartModel from '../../../../DB/models/cart.model'
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const {products, phone, adress, couponCode, paymentType} = req.body
+    const {products, phone, adress, couponId, paymentType} = req.body
     const userId = req.user._id
     
     // Handle Coupon
     let coupon: Coupon | undefined = undefined
-    if (couponCode) {
-        const checkedCoupon = await CouponModel.findOne({code: couponCode.toLowerCase(), usedBy: {$nin: userId}})
+    if (couponId) {
+        const checkedCoupon = await CouponModel.findOne({_id: couponId, usedBy: {$nin: userId}})
         if (!checkedCoupon || checkedCoupon.duration.to.getTime() < Date.now()) {
             return next(new ResError('In-valid Coupon Code', 404))
         } else {
@@ -23,12 +23,11 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     }
 
     // Handle Products
-    // let orderd
     let productsList: ProductOrderInfo[] = []
     let subTotal = 0
     for (let product of products) {
         const checkProduct = await ProductModel.findOne({
-            _id: product._id,
+            _id: product.productId,
             stock: {$gte: product.quantity}
         })
 
@@ -37,7 +36,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         }
 
         productsList.push({
-            productId: product._id,
+            productId: product.productId,
             quantity: product.quantity,
             unitPrice: checkProduct.finalPrice,
             totalProductPrice: checkProduct.finalPrice * product.quantity
@@ -49,7 +48,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     const dummyOrder: Order = {
         user: userId,
         products: productsList,
-        coupon: coupon?._id,
+        couponId,
         checkoutPrice: (subTotal - ((subTotal * (coupon?.amount || 0)) / 100)),
         paymentType: paymentType == 'credit' ? 'credit' : 'cash',
         phone,
@@ -66,23 +65,24 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     // decrease products stock
     for (let product of req.body.products) {
-        const updatedProduct = await ProductModel.updateOne({_id: product._id}, {$inc: {stock: -parseInt(product.quantity)}})
+        const updatedProduct = await ProductModel.updateOne({_id: product.productId}, {$inc: {stock: -parseInt(product.quantity)}})
         if (!updatedProduct.modifiedCount) 
             return next(new ResError('Something Went Wrong with decreasing products stock, please try again', 500))
     }
 
     // Handle Coupon 
-    if (coupon) {
+    if (couponId) {
         const updatedCoupon = await CouponModel.updateOne({_id: coupon?._id}, {$addToSet: {usedBy: req.user._id}})
-        if (!updatedCoupon.modifiedCount) 
+        if (!updatedCoupon.modifiedCount){ 
+            for (let product of req.body.products) {
+                await ProductModel.findByIdAndUpdate(product.productId, {$inc: {stock: parseInt(product.quantity)}})
+            }
             return next(new ResError('Something Went Wrong with Coupon, please try again', 500))
+        }
     }
 
     // Handle Cart
-    const updatedCart = await CartModel.updateOne({user: req.user._id}, {$pull: {product: {$in: productsList.map(prod => prod.productId)}}})
-    if (!updatedCart.modifiedCount) 
-        return next(new ResError('Something Went Wrong with Coupon, please try again', 500))
-
+    await CartModel.updateOne({user: req.user._id}, {$pull: {product: {$in: productsList.map(prod => prod.productId)}}})
     return res.status(201).json({message: 'Done!'})
 }
 
