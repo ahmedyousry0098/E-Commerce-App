@@ -45,3 +45,10 @@ export const updateProductSchema = joi.object<ProductSchema>({
         subImgs: joi.array().items(generalFields.file).max(3),
     })
 }).required()
+
+export const getProductsSchema = joi.object({
+    page: joi.number().integer().positive(),
+    limit: joi.number().integer().positive(),
+    sort: joi.string(),
+    search: joi.string(),
+}).required()

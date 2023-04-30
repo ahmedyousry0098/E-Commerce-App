@@ -7,6 +7,7 @@ import { ResError } from '../../utils/errorHandling'
 import { nanoid } from 'nanoid'
 import cloudinary from '../../utils/cloudinary'
 import { Image } from '../../types/general'
+import {ApiFeatures} from '../../utils/ApiFeatures'
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     const {categoryId, subCategoryId, brandId} = req.body;
@@ -110,11 +111,16 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
 
-    const products = await ProductModel.find().populate([
+    const mongooseQuery = ProductModel.find().populate([
         {
             path: 'review'
         }
     ])
 
+    const api = new ApiFeatures(mongooseQuery, req.query).paginate().filter()
+    const products = await api.mongooseQuery
+    if (!products) {
+        return next(new ResError('Something Went Wrong Please Try Again', 500))
+    }
     return res.status(200).json({products})
 }

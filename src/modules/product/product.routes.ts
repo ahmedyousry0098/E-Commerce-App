@@ -1,10 +1,10 @@
 import {Router} from 'express'
 import { uploadFile, validation } from '../../utils/multer'
 import { asyncHandler } from '../../utils/errorHandling'
-import { createProduct, updateProduct } from './product.controller'
+import { createProduct, getProducts, updateProduct } from './product.controller'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
-import { createProductSchema, updateProductSchema } from './product.schema'
+import { createProductSchema, getProductsSchema, updateProductSchema } from './product.schema'
 import reviewRouter from '../review/review.routes'
 import wishListRouter from '../wishList/wishList.routes'
 
@@ -34,5 +34,7 @@ router.put(
     validate(updateProductSchema),
     asyncHandler(updateProduct)
 )
+
+router.get('/', asyncHandler(getProducts))
 
 export default router
