@@ -4,6 +4,7 @@ import { Order } from '../../src/types/Order'
 const orderSchema = new Schema<Order>({
     user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     products: [{
+        name: {type: String, required: true},
         productId: {type: mongoose.Types.ObjectId, ref: 'Product', required: true},
         quantity: {type: Number, required: true},
         unitPrice: {type: Number, required: true},
@@ -17,7 +18,13 @@ const orderSchema = new Schema<Order>({
         default: 'cash'
     },
     phone: [{type:String, required: true}],
-    adress: {type: String, required: true},
+    address: {
+        apartment: {type: String, required: true},
+        building: {type: String, required: true},
+        street: {type: String, required: true},
+        city: {type: String, required: true},
+        country: {type:String, default: 'egypt'}
+    },
     status: {
         value: {
             type: String,

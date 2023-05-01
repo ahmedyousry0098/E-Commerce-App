@@ -14,7 +14,7 @@ export const isAuthenticated = asyncHandler(async (req: Request, res: Response, 
         return next(new ResError('In-valid authorization key', 400)) 
     }
 
-    const user = await UserModel.findById(decoded.id).select('email role lastChangePasswordTime')
+    const user = await UserModel.findById(decoded.id).select('userName email role lastChangePasswordTime')
     if (!user) {
         return next(new ResError('Not Registerd Account', 401))
     }

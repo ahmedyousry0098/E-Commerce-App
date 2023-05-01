@@ -6,9 +6,12 @@ import { Coupon } from '../../../types/Coupon'
 import ProductModel from '../../../../DB/models/product.model'
 import OrderModel from '../../../../DB/models/order.model'
 import CartModel from '../../../../DB/models/cart.model'
+import createInvoice from '../../../utils/templates/invoicePDF'
+import { sendEmail } from '../../../utils/sendEmail'
+import path from 'path'
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
-    const {products, phone, adress, couponId, paymentType} = req.body
+    const {products, phone, address: {apartment, building, street, city}, couponId, paymentType} = req.body
     const userId = req.user._id
     
     // Handle Coupon
@@ -36,6 +39,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         }
 
         productsList.push({
+            name: checkProduct.name,
             productId: product.productId,
             quantity: product.quantity,
             unitPrice: checkProduct.finalPrice,
@@ -52,14 +56,20 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         checkoutPrice: (subTotal - ((subTotal * (coupon?.amount || 0)) / 100)),
         paymentType: paymentType == 'credit' ? 'credit' : 'cash',
         phone,
-        adress,
+        address: {
+            apartment, 
+            building, 
+            street, 
+            city
+        },
         status: {
             value: paymentType == 'credit'? 'wait-payment' : 'placed',
             comment: req.body?.status?.comment
         }
     }
 
-    if (!await OrderModel.create(dummyOrder)) {
+    const order = await OrderModel.create(dummyOrder)
+    if (!order) {
         return next(new ResError('Cannot Create Order Please Try Again!', 500))
     }
 
@@ -83,7 +93,32 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 
     // Handle Cart
     await CartModel.updateOne({user: req.user._id}, {$pull: {product: {$in: productsList.map(prod => prod.productId)}}})
-    return res.status(201).json({message: 'Done!'})
+
+    const invoice = {
+        shipping: {
+          name: req.user.userName.toLocaleUpperCase(),
+          apartment: order.address.apartment,
+          building: order.address.building,
+          city: order.address.city,
+          country: order.address.country || 'egypt',
+        },
+        date: order.createdAt || new Date(),
+        items: order.products,
+        subTotal,
+        paid: order.checkoutPrice,
+        invoice_nr: order._id
+    };
+      
+    await createInvoice(invoice, `${path.join(path.resolve(), './src/assets')}/invoice.pdf`)
+
+    await sendEmail({
+        to: req.user.email,
+        html: '', 
+        subject: 'Invoice', 
+        attachment: [{path: path.join(path.resolve(), './src/assets/invoice.pdf')}], 
+    })
+
+    return res.status(201).json({message: 'Done!', order})
 }
 
 export const cancelOrder = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer'
+import { Attachment } from 'nodemailer/lib/mailer';
 
 export type EmailOptions = {
     to: string;
     subject: string;
     html: string;
+    attachment?: Attachment[];
 }
 
 export const sendEmail = async (options: EmailOptions) => {
@@ -18,7 +20,8 @@ export const sendEmail = async (options: EmailOptions) => {
     const Info = await transporter.sendMail({
         to: options.to,
         subject: options.subject,
-        html: options.html
+        html: options.html,
+        attachments: options.attachment
     })
 
     return Info

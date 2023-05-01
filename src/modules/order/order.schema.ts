@@ -1,7 +1,7 @@
 import joi from 'joi'
 import { generalFields } from '../../constants/validation.general'
 import mongoose from 'mongoose'
-import { ProductOrderInfo } from '../../types/Order';
+import { ProductOrderInfo, Address } from '../../types/Order';
 
 interface CreateOrder {
     products: {
@@ -9,9 +9,9 @@ interface CreateOrder {
         quantity: number;
     };
     phone: string [],
-    adress: string,
+    address: Address,
     comment: string,
-    coupon: string,
+    couponId: string,
     paymentType: string
 }
 
@@ -26,9 +26,14 @@ export const createOrderSchema = joi.object<CreateOrder>({
         quantity: joi.number().positive().integer()
     }).required()),
     phone: joi.array().items(generalFields.phone.required()).required(),
-    adress: joi.string().required(),
+    address: joi.object<Address>({
+        apartment: joi.string().required(),
+        building: joi.string().required(),
+        street: joi.string().required(),
+        city: joi.string().required(),
+    }),
     comment: joi.string().min(3).max(1500),
-    coupon: generalFields.Id,
+    couponId: generalFields.Id,
     paymentType: joi.string().valid('credit', 'cash')
 }).required()
 
