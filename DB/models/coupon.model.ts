@@ -1,7 +1,7 @@
 import mongoose, {Schema, model} from 'mongoose'
-import { Coupon } from '../../src/types/Coupon'
+import { ICoupon } from '../../src/types/coupon.type'
 
-const couponSchema = new Schema<Coupon>({
+const couponSchema = new Schema<ICoupon>({
     code: {
         type: String,
         unique: true,
@@ -35,6 +35,6 @@ const couponSchema = new Schema<Coupon>({
     timestamps: true
 })
 
-const CouponModel = model<Coupon>('Coupon', couponSchema)
+const CouponModel = model<ICoupon>('Coupon', couponSchema)
 
 export default CouponModel

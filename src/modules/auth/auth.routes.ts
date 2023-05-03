@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { confirmEmail, logIn, register, requestForgetPassword, resetPassword } from './auth.controller'
 import { asyncHandler } from '../../utils/errorHandling'
 import { validate } from '../../middlewares/validation'
-import { registerSchema, confirmEmailSchema, loginSchema, forgetPasswordSchema, resetPasswordSchema } from './auth.schema'
+import { registerSchema, confirmEmailSchema, loginSchema, forgetPasswordSchema, resetPasswordSchema } from './auth.validation'
 
 const router = Router()
 

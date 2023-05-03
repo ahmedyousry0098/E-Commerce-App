@@ -1,22 +1,6 @@
-import joi, {ObjectSchema} from 'joi'
+import joi from 'joi'
 import mongoose from 'mongoose'
-
-export interface File {
-    filename: string;
-    fieldname: string;
-    encoding: string;
-    mimetype: string;
-    path: string;
-    destination: string;
-    originalname: string;
-    size: number;
-    dist?: string;
-}
-
-export interface Duration {
-    from?: Date;
-    to: Date
-}
+import { Duration, File } from '../types/general.types'
 
 export const generalFields = {
     file: joi.object<File>({

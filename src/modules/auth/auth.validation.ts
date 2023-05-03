@@ -1,8 +1,8 @@
 import joi from 'joi'
-import {User} from '../../types/User'
+import {IUser} from '../../types/user.types'
 import { generalFields } from '../../constants/validation.general'
 
-interface Register extends User {
+interface Register extends IUser {
     confirmationPassword: string;
 }
 

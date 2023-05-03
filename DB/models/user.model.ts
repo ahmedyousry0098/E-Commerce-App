@@ -1,8 +1,8 @@
 import mongoose, {Schema} from 'mongoose'
 import {hash, compareHash} from '../../src/utils/encryption'
-import { User } from '../../src/types/User'
+import { IUser } from '../../src/types/user.types'
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
     userName: {
         type: String,
         lowercase: true,
@@ -58,6 +58,6 @@ userSchema.pre('save', function(next){
     }
 })
 
-const UserModel = mongoose.model<User>('User', userSchema)
+const UserModel = mongoose.model<IUser>('User', userSchema)
 
 export default UserModel

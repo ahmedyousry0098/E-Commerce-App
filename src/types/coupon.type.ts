@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Coupon {
+export interface ICoupon {
     _id: typeof mongoose.Types.ObjectId,
     code: string;
     amount: number;

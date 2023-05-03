@@ -2,7 +2,7 @@ import {Router} from 'express'
 import { asyncHandler } from '../../utils/errorHandling'
 import { addReview } from './review.controller'
 import { validate } from '../../middlewares/validation'
-import { addReviewSchema } from './review.schema'
+import { addReviewSchema } from './review.validation'
 import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router({mergeParams: true})

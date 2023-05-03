@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import joi, {ObjectSchema, ValidationResult} from 'joi'
-import { ResError } from '../utils/errorHandling'
 
 export const validate = (schema: ObjectSchema) => {
     return (req: Request, res: Response, next: NextFunction) => {

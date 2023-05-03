@@ -1,6 +1,6 @@
 import fs  from "fs";
 import PDFDocument from "pdfkit";
-import { ProductOrderInfo } from "../../types/Order";
+import { ProductOrderInfo } from "../../types/general.types";
 import { Types } from "mongoose";
 import path from 'path'
 

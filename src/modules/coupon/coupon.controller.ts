@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import CouponModel from '../../../DB/models/coupon.model'
 import { ResError } from '../../utils/errorHandling'
-import moment from 'moment'
 
 export const addCoupon = async (req: Request, res: Response, next: NextFunction) => {
     const {code, amount, duration: {from, to}} = req.body

@@ -1,10 +1,10 @@
 import mongoose, {Schema, model, mongo} from 'mongoose'
-import { Product } from '../../src/types/Product'
+import { IProduct } from '../../src/types/product.types'
 import slugify from 'slugify'
 import { nanoid } from 'nanoid'
 import cloudinary from '../../src/utils/cloudinary'
 
-const productSchema = new Schema<Product>({
+const productSchema = new Schema<IProduct>({
     customId: {type:String, default: () => nanoid()},
     name: {
         type: String,
@@ -52,7 +52,7 @@ productSchema.pre('save', function(next){
             lower: true
         })
     }
-    if (this.isModified(['price', 'discount'])) {
+    if (this.isModified(['price', 'discount'])) { // Check
         const [price, discount] = [this.price, this.discount]
         this.finalPrice = price - (price * (discount/100))
     }
@@ -65,6 +65,6 @@ productSchema.virtual('review', {
     foreignField: 'productId'
 })
 
-const ProductModel = model<Product>('Product', productSchema)
+const ProductModel = model<IProduct>('Product', productSchema)
 
 export default ProductModel

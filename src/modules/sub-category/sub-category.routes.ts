@@ -3,7 +3,7 @@ import { addSubCategory, updateSubCategory } from './sub-category.controller'
 import {uploadFile, validation} from '../../utils/multer'
 import {validate} from '../../middlewares/validation'
 import { asyncHandler } from '../../utils/errorHandling'
-import { createSubCategorySchema, updateSubCategorySchema } from './sub-category.schema'
+import { createSubCategorySchema, updateSubCategorySchema } from './sub-category.validation'
 import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router({mergeParams: true})

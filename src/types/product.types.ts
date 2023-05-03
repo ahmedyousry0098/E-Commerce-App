@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-import { Image } from './general'
+import { Image } from './general.types'
 
-export interface Product {
+export interface IProduct {
     customId: string;
     name: string
     slug: string

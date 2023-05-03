@@ -1,8 +1,8 @@
 import mongoose, {Schema} from 'mongoose'
-import { SubCategory } from '../../src/types/SubCategory';
+import { ISubCategory } from '../../src/types/subCategories.types';
 import {nanoid} from 'nanoid'
 
-const subCategorySchema = new Schema<SubCategory>({
+const subCategorySchema = new Schema<ISubCategory>({
     customId: {type: String, default: () => nanoid(4)},
     title: {
         type: String,
@@ -31,6 +31,6 @@ const subCategorySchema = new Schema<SubCategory>({
     timestamps: true
 })
 
-const SubCategoryModel = mongoose.model<SubCategory>('SubCategory', subCategorySchema)
+const SubCategoryModel = mongoose.model<ISubCategory>('SubCategory', subCategorySchema)
 
 export default SubCategoryModel;

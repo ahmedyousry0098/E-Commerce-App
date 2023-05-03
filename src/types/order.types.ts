@@ -1,22 +1,7 @@
 import mongoose from "mongoose";
+import { Address, ProductOrderInfo } from "./general.types";
 
-export type ProductOrderInfo = {
-    name: string
-    productId: typeof mongoose.Types.ObjectId;
-    quantity: number;
-    unitPrice: number;
-    totalProductPrice: number;
-}
-
-export type Address = {
-    apartment: string,
-    building: string,
-    street: string,
-    city: string,
-    country?: string
-};
-
-export interface Order {
+export interface IOrder {
     user: typeof mongoose.Types.ObjectId;
     products: ProductOrderInfo[];
     couponId?: typeof mongoose.Types.ObjectId;

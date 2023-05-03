@@ -6,7 +6,7 @@ import BrandModel from '../../../DB/models/brand.model'
 import { ResError } from '../../utils/errorHandling'
 import { nanoid } from 'nanoid'
 import cloudinary from '../../utils/cloudinary'
-import { Image } from '../../types/general'
+import { Image } from '../../types/general.types'
 import {ApiFeatures} from '../../utils/ApiFeatures'
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {

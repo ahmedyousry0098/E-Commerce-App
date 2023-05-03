@@ -1,6 +1,6 @@
 import joi from 'joi'
 import { generalFields } from '../../constants/validation.general'
-import { File } from '../../constants/validation.general'
+import { File } from '../../types/general.types'
 
 interface CreateCategory {
     title: string,

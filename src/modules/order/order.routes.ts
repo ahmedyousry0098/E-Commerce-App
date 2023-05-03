@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import { asyncHandler } from '../../utils/errorHandling'
-import { createOrder, cancelOrder } from './controllers/order.controller'
+import { createOrder, cancelOrder } from './order.controller'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
-import { cancelOrderSchema, createOrderSchema } from './order.schema'
+import { cancelOrderSchema, createOrderSchema } from './order.validation'
 
 const router = Router()
 

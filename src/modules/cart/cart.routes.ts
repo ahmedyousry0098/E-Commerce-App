@@ -3,7 +3,7 @@ import { asyncHandler } from '../../utils/errorHandling'
 import { addCart } from './cart.controller'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
-import { addCartSchema } from './cart.schema'
+import { addCartSchema } from './cart.validation'
 
 const router = Router()
 

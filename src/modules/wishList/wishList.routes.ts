@@ -3,7 +3,7 @@ import { addToWishList, removeFromWishList } from './wishList.controller'
 import { asyncHandler } from '../../utils/errorHandling'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
-import { wishListSchema } from './wishList.schema'
+import { wishListSchema } from './wishList.validation'
 
 const router = Router({mergeParams: true})
 

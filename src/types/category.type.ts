@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
-import { Image } from "./general";
+import { Image } from "./general.types";
 
-export interface Category {
+export interface ICategory {
     _id: typeof mongoose.Types.ObjectId;
     customId: string;
     title: string;

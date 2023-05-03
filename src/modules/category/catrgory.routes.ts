@@ -4,7 +4,7 @@ import subCategoryRouter from '../sub-category/sub-category.routes'
 import {uploadFile, validation} from '../../utils/multer'
 import { asyncHandler } from '../../utils/errorHandling'
 import { validate } from '../../middlewares/validation'
-import { createCategorySchema, updateCategorySchema } from './category.schema'
+import { createCategorySchema, updateCategorySchema } from './category.validation'
 import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router()

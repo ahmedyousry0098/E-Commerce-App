@@ -1,9 +1,9 @@
-import { User } from "./types/User"
+import { IUser } from "./types/user.types"
 
 declare global {
     export namespace Express {
         export interface Request {
-            user: User
+            user: IUser
         }
     }
 }

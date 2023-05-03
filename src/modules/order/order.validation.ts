@@ -1,7 +1,7 @@
 import joi from 'joi'
 import { generalFields } from '../../constants/validation.general'
 import mongoose from 'mongoose'
-import { ProductOrderInfo, Address } from '../../types/Order';
+import { ProductOrderInfo, Address } from '../../types/general.types';
 
 interface CreateOrder {
     products: {

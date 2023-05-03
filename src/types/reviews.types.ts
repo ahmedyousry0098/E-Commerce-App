@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Review {
+export interface IReview {
     rating: number;
     comment: string;
     createdBy: typeof mongoose.Types.ObjectId;

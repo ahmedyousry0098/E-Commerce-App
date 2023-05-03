@@ -1,14 +1,14 @@
 import joi from 'joi'
 import { generalFields } from '../../constants/validation.general'
-import { Product } from '../../types/Product'
-import { Image } from '../../types/general'
+import { IProduct } from '../../types/product.types'
+import { Image } from '../../types/general.types'
 
 type File = {
     mainImg: Image[],
     subImgs: Image[]
 }
 
-interface ProductSchema extends Product {
+interface ProductSchema extends IProduct {
     file: File
 }
 

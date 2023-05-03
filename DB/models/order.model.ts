@@ -1,7 +1,7 @@
 import mongoose, {Schema, model} from 'mongoose'
-import { Order } from '../../src/types/Order'
+import { IOrder } from '../../src/types/order.types'
 
-const orderSchema = new Schema<Order>({
+const orderSchema = new Schema<IOrder>({
     user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     products: [{
         name: {type: String, required: true},
@@ -37,6 +37,6 @@ const orderSchema = new Schema<Order>({
     timestamps: true
 })
 
-const OrderModel = model('Order', orderSchema)
+const OrderModel = model<IOrder>('Order', orderSchema)
 
 export default OrderModel

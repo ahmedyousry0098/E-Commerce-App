@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface User {
+export interface IUser {
     _id: typeof mongoose.Types.ObjectId;
     userName: string,
     email: string,
@@ -13,5 +13,5 @@ export interface User {
     resetCode?: string,
     lastChangePasswordTime: Date,
     wishList: typeof mongoose.Types.ObjectId []
-    comparePassword: (password:string) => boolean
+    comparePassword(password: string): boolean
 }

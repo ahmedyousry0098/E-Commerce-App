@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { asyncHandler } from '../../utils/errorHandling'
 import { addCoupon, updateCoupon } from './coupon.controller'
 import { validate } from '../../middlewares/validation'
-import { addCouponSchema, updateCouponSchema } from './coupon.schema'
+import { addCouponSchema, updateCouponSchema } from './coupon.validation'
 import { isAuthenticated } from '../../middlewares/authentication'
 
 const router = Router()

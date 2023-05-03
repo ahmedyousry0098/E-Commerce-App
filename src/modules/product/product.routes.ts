@@ -4,7 +4,7 @@ import { asyncHandler } from '../../utils/errorHandling'
 import { createProduct, getProducts, updateProduct } from './product.controller'
 import { isAuthenticated } from '../../middlewares/authentication'
 import { validate } from '../../middlewares/validation'
-import { createProductSchema, getProductsSchema, updateProductSchema } from './product.schema'
+import { createProductSchema, getProductsSchema, updateProductSchema } from './product.validation'
 import reviewRouter from '../review/review.routes'
 import wishListRouter from '../wishList/wishList.routes'
 

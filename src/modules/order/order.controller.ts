@@ -1,21 +1,22 @@
 import { Request, Response, NextFunction } from 'express'
-import CouponModel from '../../../../DB/models/coupon.model'
-import { ResError } from '../../../utils/errorHandling'
-import { Order, ProductOrderInfo } from '../../../types/Order'
-import { Coupon } from '../../../types/Coupon'
-import ProductModel from '../../../../DB/models/product.model'
-import OrderModel from '../../../../DB/models/order.model'
-import CartModel from '../../../../DB/models/cart.model'
-import createInvoice from '../../../utils/templates/invoicePDF'
-import { sendEmail } from '../../../utils/sendEmail'
+import CouponModel from '../../../DB/models/coupon.model'
+import { ResError } from '../../utils/errorHandling'
+import { IOrder } from '../../types/order.types'
+import { ICoupon } from '../../types/coupon.type'
+import ProductModel from '../../../DB/models/product.model'
+import OrderModel from '../../../DB/models/order.model'
+import CartModel from '../../../DB/models/cart.model'
+import createInvoice from '../../utils/templates/invoicePDF'
+import { sendEmail } from '../../utils/sendEmail'
 import path from 'path'
+import { ProductOrderInfo } from '../../types/general.types'
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
     const {products, phone, address: {apartment, building, street, city}, couponId, paymentType} = req.body
     const userId = req.user._id
     
     // Handle Coupon
-    let coupon: Coupon | undefined = undefined
+    let coupon: ICoupon | undefined = undefined
     if (couponId) {
         const checkedCoupon = await CouponModel.findOne({_id: couponId, usedBy: {$nin: userId}})
         if (!checkedCoupon || checkedCoupon.duration.to.getTime() < Date.now()) {
@@ -49,7 +50,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         subTotal += checkProduct.finalPrice * product.quantity
     }
 
-    const dummyOrder: Order = {
+    const dummyOrder: IOrder = {
         user: userId,
         products: productsList,
         couponId,
